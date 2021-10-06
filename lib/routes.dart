@@ -5,20 +5,19 @@ import 'package:new_website/pages/guru/guru.dart';
 import 'package:new_website/pages/guru/guru_data.dart';
 import 'package:new_website/pages/siswa/siswa.dart';
 import 'package:new_website/pages/siswa/siswa_data.dart';
+import 'package:new_website/pages/siswa/siswa_nilai.dart';
 import 'package:new_website/pages/tahun%20ajar/tahun_ajar.dart';
 import 'package:new_website/pages/tahun%20ajar/tahun_ajar_data.dart';
-import 'package:new_website/pages/user/user.dart';
-import 'package:new_website/pages/user/user_data.dart';
 
 class Routes {
   static const String auth = '/auth';
-  static const String dashboard = '/';
-  static const String user = '/user';
-  static const String userData = '/user-data';
+  static const String dashboard = '/dashboard';
+
   static const String guru = '/guru';
   static const String guruData = '/guru-data';
   static const String siswa = '/siswa';
   static const String siswaData = '/siswa-data';
+  static const String siswaNilai = '/siswa-nilai';
   static const String tahunAjar = '/tahun-ajar';
   static const String tahunAjarData = '/tahun-ajar-data';
 
@@ -28,14 +27,13 @@ class Routes {
         return _route(const PageAuth(), settings);
       case dashboard:
         return _route(const PageDashboard(), settings);
-      case user:
-        return _route(const PageUser(), settings);
-      case userData:
-        return _route(const PageUserData(), settings);
+
       case siswa:
         return _route(const PageSiswa(), settings);
       case siswaData:
         return _route(const PageSiswaData(), settings);
+      case siswaNilai:
+        return _route(const PageSiswaNilai(), settings);
       case guru:
         return _route(const PageGuru(), settings);
       case guruData:

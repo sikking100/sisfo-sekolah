@@ -10,7 +10,10 @@ class PageTahunAjarData extends GetView<TahunAjarController> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text('Tambah Data'),
+        Text(
+          'Tambah Data',
+          style: Get.textTheme.headline4,
+        ),
         const SizedBox(height: 20),
         TextField(
           controller: controller.tahun,

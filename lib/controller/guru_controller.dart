@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:new_website/model/guru.dart';
@@ -6,6 +7,7 @@ import 'package:new_website/model/guru.dart';
 class GuruController extends GetxController {
   final TextEditingController name = TextEditingController();
   final TextEditingController nip = TextEditingController();
+  final TextEditingController email = TextEditingController();
 
   final FirebaseFirestore _store = FirebaseFirestore.instance;
 
@@ -37,11 +39,14 @@ class GuruController extends GetxController {
   void create() async {
     try {
       isLoading.value = true;
-      await _store.doc('guru/${nip.text}').set({
+      final result = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email.text, password: '123456');
+      await _store.doc('guru/${result.user?.uid}').set({
         'nip': nip.text,
         'nama': name.text,
         'kelas': kelas.value,
+        'email': email.text,
       });
+      getData();
       Get.snackbar('Sukses', 'Data berhasil ditambah');
       return;
     } catch (e) {

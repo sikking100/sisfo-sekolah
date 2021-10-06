@@ -16,7 +16,10 @@ class PageGuru extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Guru'),
+            Text(
+              'Guru',
+              style: Get.textTheme.headline4,
+            ),
             const SizedBox(height: 10),
             ElevatedButton(onPressed: () => Get.toNamed(Routes.guruData), child: const Text('Tambah Data')),
             const SizedBox(height: 20),
@@ -28,6 +31,7 @@ class PageGuru extends StatelessWidget {
                     DataColumn(label: Text('NIP')),
                     DataColumn(label: Text('Nama')),
                     DataColumn(label: Text('Kelas')),
+                    DataColumn(label: Text('Email')),
                     DataColumn(label: Text('Aksi')),
                   ],
                   rows: List.generate(
@@ -39,11 +43,12 @@ class PageGuru extends StatelessWidget {
                         DataCell(Text(data.nip)),
                         DataCell(Text(data.nama)),
                         DataCell(Text(data.kelas)),
+                        DataCell(Text(data.email)),
                         DataCell(ButtonBar(
                           children: [
                             IconButton(
                                 onPressed: () =>
-                                    NavigationController.to.navigateTo(route: Routes.siswaData, arguments: data),
+                                    NavigationController.to.navigateTo(route: Routes.guruData, arguments: data),
                                 icon: edit),
                             IconButton(onPressed: () => controller.delete(data.nip), icon: delete),
                           ],

@@ -14,7 +14,10 @@ class PageTahunAjar extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Tahun Ajaran'),
+            Text(
+              'Tahun Ajaran',
+              style: Get.textTheme.headline4,
+            ),
             const SizedBox(height: 10),
             ElevatedButton(onPressed: () => Get.toNamed(Routes.tahunAjarData), child: const Text('Tambah Data')),
             const SizedBox(height: 20),

@@ -18,7 +18,10 @@ class PageSiswaData extends GetView<SiswaController> {
     }
     return Column(
       children: [
-        Text(Get.arguments != null ? 'Edit Data Siswa' : 'Tambah Data Siswa'),
+        Text(
+          Get.arguments != null ? 'Edit Data Siswa' : 'Tambah Data Siswa',
+          style: Get.textTheme.headline4,
+        ),
         const SizedBox(height: 20),
         TextField(
           controller: controller.nis,

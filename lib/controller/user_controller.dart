@@ -19,7 +19,6 @@ class UserController extends GetxController {
   final RxString nip = ''.obs;
   final RxList<ModelUser> listUser = <ModelUser>[].obs;
   final RxList<ModelGuru> listGuru = <ModelGuru>[].obs;
-  late Worker _worker;
 
   @override
   void onInit() {

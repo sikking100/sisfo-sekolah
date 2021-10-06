@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:new_website/controller/index_controller.dart';
 import 'package:new_website/controller/local_navigator.dart';
 import 'package:new_website/routes.dart';
+import 'package:new_website/utils/constant.dart';
 
 class PageIndex extends StatelessWidget {
   const PageIndex({Key? key, required this.widget}) : super(key: key);
@@ -22,6 +23,11 @@ class PageIndex extends StatelessWidget {
       child: GetX<IndexController>(
         init: IndexController(),
         builder: (controller) {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           if (controller.user.value == null) return widget ?? Container();
           return IndexWidget(widget: widget ?? Container());
         },
@@ -47,32 +53,35 @@ class IndexWidget extends StatelessWidget {
                 textColor: Theme.of(context).colorScheme.onPrimary,
                 child: ListView(
                   children: [
-                    const DrawerHeader(child: Text('Sisfo')),
+                    const DrawerHeader(
+                      child: Icon(
+                        Icons.add_reaction_outlined,
+                        size: 100,
+                        color: Colors.white,
+                      ),
+                    ),
                     ListTile(
                       onTap: () => NavigationController.to.replaceTo(route: Routes.dashboard),
                       leading: const Icon(Icons.dashboard),
                       title: const Text('Dashboard'),
                     ),
                     ListTile(
-                      onTap: () => NavigationController.to.replaceTo(route: Routes.user),
-                      leading: const Icon(Icons.verified_user),
-                      title: const Text('User'),
-                    ),
-                    ListTile(
                       onTap: () => NavigationController.to.replaceTo(route: Routes.siswa),
                       leading: const Icon(Icons.person),
                       title: const Text('Siswa'),
                     ),
-                    ListTile(
-                      onTap: () => NavigationController.to.replaceTo(route: Routes.guru),
-                      leading: const Icon(Icons.group),
-                      title: const Text('Guru'),
-                    ),
-                    ListTile(
-                      onTap: () => NavigationController.to.replaceTo(route: Routes.tahunAjar),
-                      leading: const Icon(Icons.date_range),
-                      title: const Text('Tahun Ajaran'),
-                    ),
+                    if (FirebaseAuth.instance.currentUser?.uid == id)
+                      ListTile(
+                        onTap: () => NavigationController.to.replaceTo(route: Routes.guru),
+                        leading: const Icon(Icons.group),
+                        title: const Text('Guru'),
+                      ),
+                    if (FirebaseAuth.instance.currentUser?.uid == id)
+                      ListTile(
+                        onTap: () => NavigationController.to.replaceTo(route: Routes.tahunAjar),
+                        leading: const Icon(Icons.date_range),
+                        title: const Text('Tahun Ajaran'),
+                      ),
                     ListTile(
                       onTap: () async {
                         await FirebaseAuth.instance.signOut();

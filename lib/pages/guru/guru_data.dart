@@ -15,10 +15,14 @@ class PageGuruData extends GetView<GuruController> {
       controller.name.text = data.nama;
       controller.nip.text = data.nip;
       controller.kelas.value = data.kelas;
+      controller.email.text = data.email;
     }
     return Column(
       children: [
-        Text(Get.arguments != null ? 'Edit Data Guru' : 'Tambah Data Guru'),
+        Text(
+          Get.arguments != null ? 'Edit Data Guru' : 'Tambah Data Guru',
+          style: Get.textTheme.headline4,
+        ),
         const SizedBox(height: 20),
         TextField(
           controller: controller.nip,
@@ -32,6 +36,13 @@ class PageGuruData extends GetView<GuruController> {
           controller: controller.name,
           decoration: const InputDecoration(
             label: Text('Nama'),
+          ),
+        ),
+        const SizedBox(height: 10),
+        TextField(
+          controller: controller.email,
+          decoration: const InputDecoration(
+            label: Text('Email'),
           ),
         ),
         const SizedBox(height: 10),
