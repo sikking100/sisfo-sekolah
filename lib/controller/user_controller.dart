@@ -42,7 +42,7 @@ class UserController extends GetxController {
       ]);
       log(result[1].docs.length.toString());
       listUser.assignAll(result[0].docs.map((e) => ModelUser.fromJson(e.data())));
-      listGuru.assignAll(result[1].docs.map((e) => ModelGuru.fromJson(e.data())));
+      listGuru.assignAll(result[1].docs.map((e) => ModelGuru.fromJson(e)));
       return;
     } catch (e) {
       Get.defaultDialog(middleText: e.toString());

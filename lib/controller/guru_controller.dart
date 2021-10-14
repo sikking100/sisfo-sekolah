@@ -26,7 +26,7 @@ class GuruController extends GetxController {
     try {
       isLoading.value = true;
       final result = await _store.collection('guru').get();
-      listGuru.assignAll(result.docs.map((e) => ModelGuru.fromJson(e.data())).toList());
+      listGuru.assignAll(result.docs.map((e) => ModelGuru.fromJson(e)).toList());
       return;
     } catch (e) {
       Get.defaultDialog(middleText: e.toString());
@@ -48,6 +48,7 @@ class GuruController extends GetxController {
       });
       getData();
       Get.snackbar('Sukses', 'Data berhasil ditambah');
+      await FirebaseAuth.instance.signOut();
       return;
     } catch (e) {
       Get.defaultDialog(middleText: e.toString());
@@ -57,11 +58,13 @@ class GuruController extends GetxController {
     }
   }
 
-  void delete(String nip) async {
+  void delete(String id) async {
     try {
       isLoading.value = true;
-      await _store.doc('guru/$nip').delete();
+      await _store.doc('guru/$id').delete();
       Get.snackbar('Sukses', 'Data berhasil dihapus');
+      getData();
+
       return;
     } catch (e) {
       Get.defaultDialog(middleText: e.toString());
@@ -75,12 +78,14 @@ class GuruController extends GetxController {
     try {
       final guru = Get.arguments as ModelGuru;
       isLoading.value = true;
-      await _store.doc('guru/${guru.nip}').update({
+      await _store.doc('guru/${guru.id}').update({
         'nip': nip,
         'nama': name.text,
         'kelas': kelas.value,
       });
       Get.snackbar('Sukses', 'Data berhasil diubah');
+      getData();
+
       return;
     } catch (e) {
       Get.defaultDialog(middleText: e.toString());

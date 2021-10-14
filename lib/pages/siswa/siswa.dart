@@ -51,7 +51,18 @@ class PageSiswa extends StatelessWidget {
                                   onPressed: () =>
                                       NavigationController.to.navigateTo(route: Routes.siswaData, arguments: data),
                                   icon: edit),
-                              IconButton(onPressed: () => controller.delete(data.nis), icon: delete),
+                              IconButton(
+                                  onPressed: () => Get.defaultDialog(
+                                      title: 'Peringatan',
+                                      middleText: 'Anda yakin ingin menghapus data?',
+                                      cancel: TextButton(onPressed: Get.back, child: const Text('Batal')),
+                                      confirm: TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                            controller.delete(data.nis);
+                                          },
+                                          child: const Text('Ya'))),
+                                  icon: delete),
                             ],
                           )),
                         ]);

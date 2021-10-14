@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_website/controller/dashboard_controller.dart';
 import 'package:new_website/controller/index_controller.dart';
-import 'package:new_website/model/tahunajar.dart';
-import 'package:new_website/utils/constant.dart';
 
 class PageDashboard extends StatelessWidget {
   const PageDashboard({Key? key}) : super(key: key);
+
+  String get text {
+    if (IndexController.to.guru.value.nama.isEmpty) {
+      return 'Administrator';
+    } else {
+      return IndexController.to.guru.value.nama;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +28,11 @@ class PageDashboard extends StatelessWidget {
               Text(
                 'Dashboard',
                 style: Get.textTheme.headline4,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Selamat Datang $text',
+                style: Get.textTheme.headline5?.copyWith(color: Colors.grey),
               ),
               const SizedBox(height: 30),
               Obx(

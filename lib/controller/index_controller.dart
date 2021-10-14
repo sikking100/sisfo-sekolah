@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:new_website/model/guru.dart';
-import 'package:new_website/model/tahunajar.dart';
 import 'package:new_website/routes.dart';
 import 'package:new_website/utils/constant.dart';
 
@@ -30,15 +29,13 @@ class IndexController extends GetxController {
       } else {
         try {
           isLoading.value = true;
-
+          log(u.uid);
           if (u.uid == id) {
             Get.offNamed(Routes.dashboard);
             return;
           }
           final result = await _store.doc('guru/${u.uid}').get();
-          final data = result.data();
-          if (data == null) throw 'error';
-          guru.value = ModelGuru.fromJson(data);
+          guru.value = ModelGuru.fromJson(result);
           Get.offNamed(Routes.dashboard);
           return;
         } catch (e) {

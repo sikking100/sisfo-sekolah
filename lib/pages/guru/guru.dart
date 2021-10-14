@@ -50,7 +50,19 @@ class PageGuru extends StatelessWidget {
                                 onPressed: () =>
                                     NavigationController.to.navigateTo(route: Routes.guruData, arguments: data),
                                 icon: edit),
-                            IconButton(onPressed: () => controller.delete(data.nip), icon: delete),
+                            IconButton(
+                                onPressed: () => Get.defaultDialog(
+                                      title: 'Peringatan',
+                                      middleText: 'Anda yakin ingin menghapus data?',
+                                      cancel: TextButton(onPressed: Get.back, child: const Text('Batal')),
+                                      confirm: TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                            controller.delete(data.id);
+                                          },
+                                          child: const Text('Ya')),
+                                    ),
+                                icon: delete),
                           ],
                         )),
                       ]);
