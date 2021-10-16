@@ -82,7 +82,15 @@ class PageSiswaNilai extends GetView<SiswaController> {
         TextField(
           controller: controller.spiritual,
           inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
+            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              try {
+                final text = newValue.text;
+                if (text.isNotEmpty) double.parse(text);
+                return newValue;
+              } catch (e) {}
+              return oldValue;
+            }),
           ],
           decoration: const InputDecoration(
             label: Text('Nilai Sikap Spiritual'),
@@ -92,7 +100,15 @@ class PageSiswaNilai extends GetView<SiswaController> {
         TextField(
           controller: controller.sosial,
           inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
+            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              try {
+                final text = newValue.text;
+                if (text.isNotEmpty) double.parse(text);
+                return newValue;
+              } catch (e) {}
+              return oldValue;
+            }),
           ],
           decoration: const InputDecoration(
             label: Text('Nilai Sikap Sosial'),
@@ -102,7 +118,15 @@ class PageSiswaNilai extends GetView<SiswaController> {
         TextField(
           controller: controller.rapor,
           inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
+            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              try {
+                final text = newValue.text;
+                if (text.isNotEmpty) double.parse(text);
+                return newValue;
+              } catch (e) {}
+              return oldValue;
+            }),
           ],
           decoration: const InputDecoration(
             label: Text('Nilai Rapor'),

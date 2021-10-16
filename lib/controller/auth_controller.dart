@@ -23,6 +23,32 @@ class AuthController extends GetxController {
       isLoading.value = true;
       await auth.signInWithEmailAndPassword(email: email.text, password: password.text);
       return;
+    } on FirebaseAuthException catch (e) {
+      String err = '';
+      switch (e.code) {
+        case 'user-not-found':
+          err = 'Tidak ada data pengguna yang sesuai dengan pengenal yang diberikan.';
+          break;
+        case 'invalid-password':
+          err =
+              'Nilai yang diberikan untuk properti pengguna password tidak valid. Harus berupa string dengan minimal 6 karakter.';
+          break;
+        case 'invalid-email':
+          err = 'Nilai yang diberikan untuk properti pengguna email tidak valid. Harus berupa alamat email string.';
+          break;
+        default:
+          '';
+      }
+
+      Get.defaultDialog(
+        title: 'Error',
+        middleText: err.toString(),
+        confirm: TextButton(
+          onPressed: Get.back,
+          child: const Text('Ok'),
+        ),
+      );
+      return;
     } catch (e) {
       Get.defaultDialog(
         title: 'Error',
