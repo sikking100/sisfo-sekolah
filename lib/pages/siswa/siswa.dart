@@ -53,15 +53,17 @@ class PageSiswa extends StatelessWidget {
                                   icon: edit),
                               IconButton(
                                   onPressed: () => Get.defaultDialog(
-                                      title: 'Peringatan',
-                                      middleText: 'Anda yakin ingin menghapus data?',
-                                      cancel: TextButton(onPressed: Get.back, child: const Text('Batal')),
-                                      confirm: TextButton(
+                                        title: 'Peringatan',
+                                        middleText: 'Anda yakin ingin menghapus data?',
+                                        cancel: TextButton(onPressed: Get.back, child: const Text('Batal')),
+                                        confirm: TextButton(
                                           onPressed: () {
                                             Get.back();
                                             controller.delete(data.nis);
                                           },
-                                          child: const Text('Ya'))),
+                                          child: const Text('Ya'),
+                                        ),
+                                      ),
                                   icon: delete),
                             ],
                           )),
@@ -88,6 +90,10 @@ class PageSiswa extends StatelessWidget {
                         DataCell(Text(data.kelas)),
                         DataCell(ButtonBar(
                           children: [
+                            IconButton(
+                                onPressed: () =>
+                                    NavigationController.to.navigateTo(route: Routes.siswaDetail, arguments: data),
+                                icon: detail),
                             IconButton(
                                 onPressed: () =>
                                     NavigationController.to.navigateTo(route: Routes.siswaNilai, arguments: data),

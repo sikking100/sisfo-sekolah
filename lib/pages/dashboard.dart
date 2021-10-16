@@ -52,11 +52,28 @@ class PageDashboard extends StatelessWidget {
                   );
                 },
               ),
+              const SizedBox(height: 10),
+              DropdownButton<String>(
+                value: controller.semester.value.isEmpty ? null : controller.semester.value,
+                items: const [
+                  DropdownMenuItem<String>(
+                    child: Text('Semester 1'),
+                    value: 'semester-1',
+                  ),
+                  DropdownMenuItem<String>(
+                    child: Text('Semester 2'),
+                    value: 'semester-2',
+                  ),
+                ],
+                onChanged: controller.onChangedSemester,
+                isExpanded: true,
+                hint: const Text('Pilih Semester'),
+              ),
               const SizedBox(height: 30),
               const Text('Siswa yang berprestasi'),
               const SizedBox(height: 10),
               Obx(() {
-                if (controller.tahuns.value.isEmpty) return Container();
+                if (controller.semester.value.isEmpty || controller.tahuns.value.isEmpty) return Container();
                 if (controller.isLoadingData.value) return const LinearProgressIndicator();
                 return SingleChildScrollView(
                   child: DataTable(

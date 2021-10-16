@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:new_website/controller/index_controller.dart';
+import 'package:new_website/model/data.dart';
 import 'package:new_website/model/siswa.dart';
 import 'package:new_website/model/tahunajar.dart';
 import 'package:new_website/utils/constant.dart';
@@ -13,22 +14,20 @@ import 'package:new_website/utils/constant.dart';
 class SiswaController extends GetxController {
   final TextEditingController name = TextEditingController();
   final TextEditingController nis = TextEditingController();
-  final TextEditingController spiritual1 = TextEditingController();
-  final TextEditingController sosial1 = TextEditingController();
-  final TextEditingController rapor1 = TextEditingController();
-  final TextEditingController spiritual2 = TextEditingController();
-  final TextEditingController sosial2 = TextEditingController();
-  final TextEditingController rapor2 = TextEditingController();
+  final TextEditingController spiritual = TextEditingController();
+  final TextEditingController sosial = TextEditingController();
+  final TextEditingController rapor = TextEditingController();
 
   final FirebaseFirestore _store = FirebaseFirestore.instance;
 
   final RxString kelas = ''.obs;
   final RxString tahunAjaran = ''.obs;
-  // final RxString semester = ''.obs;
+  final RxString semester = ''.obs;
   final RxBool isLoading = false.obs;
   final RxBool isLoadingTahun = false.obs;
   final RxList<ModelSiswa> listSiswa = <ModelSiswa>[].obs;
   final RxList<ModelTahunAjar> listTahunAjar = <ModelTahunAjar>[].obs;
+  final RxList<ModelNilai> listNilai = <ModelNilai>[].obs;
 
   @override
   void onInit() {
@@ -46,23 +45,17 @@ class SiswaController extends GetxController {
     super.onClose();
     name.dispose();
     nis.dispose();
-    spiritual1.dispose();
-    sosial1.dispose();
-    rapor1.dispose();
-    spiritual2.dispose();
-    sosial2.dispose();
-    rapor2.dispose();
+    spiritual.dispose();
+    sosial.dispose();
+    rapor.dispose();
   }
 
   void clear() {
     name.clear();
     nis.clear();
-    spiritual1.clear();
-    sosial1.clear();
-    rapor1.clear();
-    spiritual2.clear();
-    sosial2.clear();
-    rapor2.clear();
+    spiritual.clear();
+    sosial.clear();
+    rapor.clear();
   }
 
   void getTahunAjar() async {
@@ -85,7 +78,7 @@ class SiswaController extends GetxController {
       log(IndexController.to.guru.value.kelas);
       QuerySnapshot<Map<String, dynamic>> result;
       if (FirebaseAuth.instance.currentUser?.uid == id) {
-        result = await _store.collection('siswa').get();
+        result = await _store.collection('siswa').orderBy('kelas').get();
       } else {
         result = await _store.collection('siswa').where('kelas', isEqualTo: IndexController.to.guru.value.kelas).get();
       }
@@ -93,6 +86,25 @@ class SiswaController extends GetxController {
       return;
     } catch (e) {
       Get.defaultDialog(middleText: e.toString());
+      return;
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void getDetailSiswa() async {
+    try {
+      isLoading.value = true;
+      log(tahunAjaran.value);
+      final data = Get.arguments as ModelSiswa;
+      log(data.nis);
+
+      final result = await _store.doc('siswa/${data.nis}/tahun-ajaran/${tahunAjaran.value}').get();
+      final datas = result.data()?['data'] as List<dynamic>;
+      listNilai.assignAll(datas.map((e) => ModelNilai.fromJson(e)).toList());
+      return;
+    } catch (e) {
+      log(e.toString());
       return;
     } finally {
       isLoading.value = false;
@@ -161,67 +173,72 @@ class SiswaController extends GetxController {
     try {
       isLoading.value = true;
       final siswa = Get.arguments as ModelSiswa;
-      final fuzzy1 = fuzzyLogic(
-        nilaiRapor: double.parse(rapor1.text),
-        nilaiSpiritual: double.parse(spiritual1.text),
-        nilaiSosial: double.parse(sosial1.text),
+      final fuzzy = fuzzyLogic(
+        nilaiRapor: double.parse(rapor.text),
+        nilaiSpiritual: double.parse(spiritual.text),
+        nilaiSosial: double.parse(sosial.text),
       );
-      final fuzzy2 = fuzzyLogic(
-        nilaiRapor: double.parse(rapor2.text),
-        nilaiSpiritual: double.parse(spiritual2.text),
-        nilaiSosial: double.parse(sosial2.text),
-      );
-      final total = (fuzzy1 + fuzzy2) / 2;
+
       String keterangan = '';
-      if (73 <= total && total <= 80) {
+      if (73 <= fuzzy && fuzzy <= 80) {
         keterangan = 'Berprestasi';
       } else {
         keterangan = 'Tidak Berprestasi';
       }
       await _store.doc('siswa/${siswa.nis}/tahun-ajaran/${tahunAjaran.value}').set(
         {
-          'semester-1': {
-            'spiritual': double.parse(spiritual1.text),
-            'sosial': double.parse(sosial1.text),
-            'rapor': double.parse(rapor1.text),
-            'nilaiFuzzy': fuzzy1,
-          },
-          'semester-2': {
-            'spiritual': double.parse(spiritual2.text),
-            'sosial': double.parse(sosial2.text),
-            'rapor': double.parse(rapor2.text),
-            'nilaiFuzzy': fuzzy2,
-          },
+          'data': FieldValue.arrayUnion(
+            [
+              {
+                'semester': semester.value,
+                'spiritual': double.parse(spiritual.text),
+                'sosial': double.parse(sosial.text),
+                'rapor': double.parse(rapor.text),
+                'nilaiFuzzy': fuzzy,
+              }
+            ],
+          ),
         },
+        SetOptions(merge: true),
       );
-      await _store.doc('tahun-ajaran/${tahunAjaran.value}/siswa/${siswa.nis}').set(
+
+      await _store.doc('tahun-ajaran/${tahunAjaran.value}/${semester.value}/${siswa.nis}').set(
         {
           'nama': siswa.nama,
           'kelas': siswa.kelas,
-          'semester-1': {
-            'nilaiFuzzy': fuzzy1,
-          },
-          'semester-2': {
-            'nilaiFuzzy': fuzzy2,
-          },
-          'total': total,
-          'keterangan': keterangan
+          'nilaiFuzzy': fuzzy,
+          'keterangan': keterangan,
         },
       );
-      await _store.doc('tahun-ajaran/${tahunAjaran.value}/${siswa.kelas}/${siswa.nis}').set(
-        {
-          'nama': siswa.nama,
-          'kelas': siswa.kelas,
-          'semester-1': {
-            'nilaiFuzzy': fuzzy1,
-          },
-          'semester-2': {
-            'nilaiFuzzy': fuzzy2,
-          },
-          'total': total,
-          'keterangan': keterangan
-        },
-      );
+
+      // await _store.doc('tahun-ajaran/${tahunAjaran.value}/siswa/${siswa.nis}').set(
+      //   {
+      //     'nama': siswa.nama,
+      //     'kelas': siswa.kelas,
+      //     'semester-1': {
+      //       'nilaiFuzzy': fuzzy1,
+      //     },
+      //     'semester-2': {
+      //       'nilaiFuzzy': fuzzy2,
+      //     },
+      //     'total': total,
+      //     'keterangan': keterangan
+      //   },
+      // );
+      // await _store.doc('tahun-ajaran/${tahunAjaran.value}/${siswa.kelas}/${siswa.nis}').set(
+      //   {
+      //     'nama': siswa.nama,
+      //     'kelas': siswa.kelas,
+      //     'semester-1': {
+      //       'nilaiFuzzy': fuzzy1,
+      //     },
+      //     'semester-2': {
+      //       'nilaiFuzzy': fuzzy2,
+      //     },
+      //     'total': total,
+      //     'keterangan': keterangan
+      //   },
+      // );
       Get.back();
       clear();
       Get.snackbar('Sukses', 'Data berhasil ditambah');

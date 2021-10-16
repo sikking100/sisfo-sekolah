@@ -7,6 +7,7 @@ import 'package:new_website/model/tahunajar.dart';
 
 class DashboardController extends GetxController {
   final RxString tahuns = ''.obs;
+  final RxString semester = ''.obs;
   final RxList<ModelTahunAjar> lists = <ModelTahunAjar>[].obs;
   final RxList<ModelData> listData = <ModelData>[].obs;
   final RxBool isLoading = true.obs;
@@ -35,15 +36,22 @@ class DashboardController extends GetxController {
 
   void onChanged(String? v) {
     tahuns.value = v.toString();
-    getData(v.toString());
     return;
   }
 
-  void getData(String tahun) async {
+  void onChangedSemester(String? v) {
+    semester.value = v.toString();
+    getData();
+    return;
+  }
+
+  void getData() async {
     try {
       isLoadingData.value = true;
-      final result =
-          await _store.collection('tahun-ajaran/$tahun/siswa').where('keterangan', isEqualTo: 'Berprestasi').get();
+      final result = await _store
+          .collection('tahun-ajaran/${tahuns.value}/${semester.value}')
+          .where('keterangan', isEqualTo: 'Berprestasi')
+          .get();
       listData.assignAll(result.docs.map((e) => ModelData.fromJson(e)).toList());
       return;
     } catch (e) {
