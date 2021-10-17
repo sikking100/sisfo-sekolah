@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:new_website/controller/index_controller.dart';
 import 'package:new_website/controller/local_navigator.dart';
+import 'package:new_website/model/guru.dart';
 import 'package:new_website/routes.dart';
 import 'package:new_website/utils/constant.dart';
 
@@ -20,17 +21,19 @@ class PageIndex extends StatelessWidget {
         if (routes == Routes.auth) return Future.value(false);
         return Future.value(true);
       },
-      child: GetX<IndexController>(
-        init: IndexController(),
-        builder: (controller) {
-          if (controller.isLoading.value) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (controller.user.value == null) return widget ?? Container();
-          return IndexWidget(widget: widget ?? Container());
-        },
+      child: Scaffold(
+        body: GetX<IndexController>(
+          init: IndexController(),
+          builder: (controller) {
+            if (controller.isLoading.value) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (controller.user.value == null) return widget ?? Container();
+            return IndexWidget(widget: widget ?? Container());
+          },
+        ),
       ),
     );
   }
@@ -86,6 +89,7 @@ class IndexWidget extends StatelessWidget {
                       onTap: () async {
                         await FirebaseAuth.instance.signOut();
                         NavigationController.to.navKey.currentState?.pushReplacementNamed(Routes.auth);
+                        IndexController.to.guru(ModelGuru());
                         return;
                       },
                       leading: const Icon(Icons.logout),

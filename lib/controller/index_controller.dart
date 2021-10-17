@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:new_website/controller/local_navigator.dart';
 import 'package:new_website/model/guru.dart';
 import 'package:new_website/routes.dart';
 import 'package:new_website/utils/constant.dart';
@@ -24,19 +25,24 @@ class IndexController extends GetxController {
     user.bindStream(FirebaseAuth.instance.authStateChanges());
     ever<User?>(user, (u) async {
       if (u == null) {
-        Get.offNamed(Routes.auth);
+        // Get.offNamed(Routes.auth);
+        NavigationController.to.replaceTo(route: Routes.auth);
         return;
       } else {
         try {
           isLoading.value = true;
           log(u.uid);
           if (u.uid == id) {
-            Get.offNamed(Routes.dashboard);
+            // Get.offNamed(Routes.dashboard);
+            NavigationController.to.replaceTo(route: Routes.dashboard);
+
             return;
           }
           final result = await _store.doc('guru/${u.uid}').get();
           guru.value = ModelGuru.fromJson(result);
-          Get.offNamed(Routes.dashboard);
+          // Get.offNamed(Routes.dashboard);
+          NavigationController.to.replaceTo(route: Routes.dashboard);
+
           return;
         } catch (e) {
           log(e.toString());

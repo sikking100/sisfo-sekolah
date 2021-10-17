@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -58,7 +60,7 @@ class PageSiswaNilai extends GetView<SiswaController> {
               )
             ],
             hint: const Text('Pilih Semester'),
-            onChanged: (value) => controller.semester.value = value.toString(),
+            onChanged: controller.onChangeNilai,
             isExpanded: true,
           ),
         ),
@@ -82,13 +84,15 @@ class PageSiswaNilai extends GetView<SiswaController> {
         TextField(
           controller: controller.spiritual,
           inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
             TextInputFormatter.withFunction((oldValue, newValue) {
               try {
                 final text = newValue.text;
                 if (text.isNotEmpty) double.parse(text);
                 return newValue;
-              } catch (e) {}
+              } catch (e) {
+                log(e.toString());
+              }
               return oldValue;
             }),
           ],
@@ -100,13 +104,15 @@ class PageSiswaNilai extends GetView<SiswaController> {
         TextField(
           controller: controller.sosial,
           inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
             TextInputFormatter.withFunction((oldValue, newValue) {
               try {
                 final text = newValue.text;
                 if (text.isNotEmpty) double.parse(text);
                 return newValue;
-              } catch (e) {}
+              } catch (e) {
+                log(e.toString());
+              }
               return oldValue;
             }),
           ],
@@ -118,13 +124,15 @@ class PageSiswaNilai extends GetView<SiswaController> {
         TextField(
           controller: controller.rapor,
           inputFormatters: [
-            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
             TextInputFormatter.withFunction((oldValue, newValue) {
               try {
                 final text = newValue.text;
                 if (text.isNotEmpty) double.parse(text);
                 return newValue;
-              } catch (e) {}
+              } catch (e) {
+                log(e.toString());
+              }
               return oldValue;
             }),
           ],

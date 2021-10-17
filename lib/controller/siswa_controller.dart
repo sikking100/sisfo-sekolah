@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:new_website/controller/index_controller.dart';
-import 'package:new_website/model/data.dart';
 import 'package:new_website/model/siswa.dart';
 import 'package:new_website/model/tahunajar.dart';
 import 'package:new_website/utils/constant.dart';
@@ -78,6 +77,7 @@ class SiswaController extends GetxController {
       log(IndexController.to.guru.value.kelas);
       QuerySnapshot<Map<String, dynamic>> result;
       if (FirebaseAuth.instance.currentUser?.uid == id) {
+        log('message');
         result = await _store.collection('siswa').orderBy('kelas').get();
       } else {
         result = await _store.collection('siswa').where('kelas', isEqualTo: IndexController.to.guru.value.kelas).get();
@@ -92,7 +92,7 @@ class SiswaController extends GetxController {
     }
   }
 
-  void getDetailSiswa() async {
+  Future<void> getDetailSiswa() async {
     try {
       isLoading.value = true;
       log(tahunAjaran.value);
@@ -101,7 +101,11 @@ class SiswaController extends GetxController {
 
       final result = await _store.doc('siswa/${data.nis}/tahun-ajaran/${tahunAjaran.value}').get();
       final datas = result.data()?['data'] as List<dynamic>;
+      print(datas);
+
       listNilai.assignAll(datas.map((e) => ModelNilai.fromJson(e)).toList());
+      print(listNilai.length);
+
       return;
     } catch (e) {
       log(e.toString());
@@ -109,6 +113,27 @@ class SiswaController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  void onChangeNilai(String? v) {
+    semester.value = v.toString();
+    getDetailSiswa().then((value) {
+      log(listNilai.length.toString());
+      if (listNilai.isEmpty) return;
+      if (v == 'semester-1') {
+        rapor.text = listNilai[0].rapor.toString();
+        spiritual.text = listNilai[0].spiritual.toString();
+        sosial.text = listNilai[0].sosial.toString();
+        return;
+      } else {
+        rapor.text = listNilai[1].rapor.toString();
+        spiritual.text = listNilai[1].spiritual.toString();
+        sosial.text = listNilai[1].sosial.toString();
+        return;
+      }
+    });
+
+    return;
   }
 
   void create() async {
