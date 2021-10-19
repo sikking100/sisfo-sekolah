@@ -48,10 +48,7 @@ class DashboardController extends GetxController {
   void getData() async {
     try {
       isLoadingData.value = true;
-      final result = await _store
-          .collection('tahun-ajaran/${tahuns.value}/${semester.value}')
-          .where('keterangan', isEqualTo: 'Berprestasi')
-          .get();
+      final result = await _store.collection('tahun-ajaran/${tahuns.value}/${semester.value}').get();
       listData.assignAll(result.docs.map((e) => ModelData.fromJson(e)).toList());
       return;
     } catch (e) {
