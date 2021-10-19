@@ -84,6 +84,8 @@ class PageDashboard extends StatelessWidget {
                       DataColumn(label: Text('Nis')),
                       DataColumn(label: Text('Nama')),
                       DataColumn(label: Text('Kelas')),
+                      DataColumn(label: Text('Nilai Akhir')),
+                      DataColumn(label: Text('Keterangan')),
                     ],
                     rows: List.generate(
                       controller.listData.length,
@@ -93,6 +95,8 @@ class PageDashboard extends StatelessWidget {
                           DataCell(Text(controller.listData[index].nis)),
                           DataCell(Text(controller.listData[index].nama)),
                           DataCell(Text(controller.listData[index].kelas)),
+                          DataCell(Text(controller.listData[index].nilai.toString())),
+                          DataCell(Text(controller.listData[index].keterangan)),
                         ],
                       ),
                     ),

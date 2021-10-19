@@ -229,6 +229,7 @@ class SiswaController extends GetxController {
 
       await _store.doc('tahun-ajaran/${tahunAjaran.value}/${semester.value}/${siswa.nis}').set(
         {
+          'nis': siswa.nis,
           'nama': siswa.nama,
           'kelas': siswa.kelas,
           'nilaiFuzzy': fuzzy,
