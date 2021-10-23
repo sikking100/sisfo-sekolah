@@ -95,7 +95,7 @@ class PageDashboard extends StatelessWidget {
                           DataCell(Text(controller.listData[index].nis)),
                           DataCell(Text(controller.listData[index].nama)),
                           DataCell(Text(controller.listData[index].kelas)),
-                          DataCell(Text(controller.listData[index].nilai.toString())),
+                          DataCell(Text(controller.listData[index].nilai.toStringAsFixed(2))),
                           DataCell(Text(controller.listData[index].keterangan)),
                         ],
                       ),

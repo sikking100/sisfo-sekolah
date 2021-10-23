@@ -60,11 +60,11 @@ class PageSiswaDetail extends GetView<SiswaController> {
                   children: [
                     Text('Semester : ${data.semester}'),
                     const SizedBox(height: 5),
-                    Text('Nilai Rata-rata Rapor : ${data.rapor}'),
+                    Text('Nilai Rata-rata Rapor : ${data.rapor.toStringAsFixed(2)}'),
                     const SizedBox(height: 5),
-                    Text('Nilai Rata-rata Spiritual : ${data.spiritual}'),
+                    Text('Nilai Rata-rata Spiritual : ${data.spiritual.toStringAsFixed(2)}'),
                     const SizedBox(height: 5),
-                    Text('Nilai Rata-rata Sosial : ${data.sosial}'),
+                    Text('Nilai Rata-rata Sosial : ${data.sosial.toStringAsFixed(2)}'),
                   ],
                 );
               },
