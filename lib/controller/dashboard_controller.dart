@@ -48,10 +48,20 @@ class DashboardController extends GetxController {
   void getData() async {
     try {
       isLoadingData.value = true;
+
+      //tidak berurut
       final result = await _store.collection('tahun-ajaran/${tahuns.value}/${semester.value}').get();
+
+      //mengurutkan
+      // final result = await _store
+      //     .collection('tahun-ajaran/${tahuns.value}/${semester.value}')
+      //     .orderBy('keterangan', descending: false)
+      //     .orderBy('nilaiFuzzy', descending: true)
+      //     .get();
       listData.assignAll(result.docs.map((e) => ModelData.fromJson(e)).toList());
       return;
     } catch (e) {
+      print(e);
       log(e.toString());
       return;
     } finally {
