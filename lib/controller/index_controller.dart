@@ -39,6 +39,7 @@ class IndexController extends GetxController {
             return;
           }
           final result = await _store.doc('guru/${u.uid}').get();
+          print(result.data());
           guru.value = ModelGuru.fromJson(result);
           // Get.offNamed(Routes.dashboard);
           NavigationController.to.replaceTo(route: Routes.dashboard);

@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:new_website/controller/local_navigator.dart';
 import 'package:new_website/model/guru.dart';
+import 'package:new_website/routes.dart';
 
 class GuruController extends GetxController {
   final TextEditingController name = TextEditingController();
@@ -48,7 +50,10 @@ class GuruController extends GetxController {
       });
       getData();
       Get.snackbar('Sukses', 'Data berhasil ditambah');
+
       await FirebaseAuth.instance.signOut();
+      NavigationController.to.replaceTo(route: Routes.auth);
+
       return;
     } catch (e) {
       Get.defaultDialog(middleText: e.toString());
