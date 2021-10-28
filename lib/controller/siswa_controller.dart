@@ -138,6 +138,9 @@ class SiswaController extends GetxController {
 
   void create() async {
     try {
+      if (listSiswa.map((element) => element.nis).contains(nis.text) == true) {
+        throw 'Data sudah ada, silakan masukkan data lain';
+      }
       isLoading.value = true;
       await _store.doc('siswa/${nis.text}').set({
         'nama': name.text,
